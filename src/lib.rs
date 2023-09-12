@@ -1,4 +1,4 @@
-use std::num::NonZeroU32;
+use std::{num::NonZeroU32, ops::Add};
 
 use softbuffer::{Context, Surface};
 use winit::{
@@ -14,6 +14,18 @@ impl Color {
 		(self.0[0] as u32) << 2 * u8::BITS
 			| (self.0[1] as u32) << u8::BITS
 			| self.0[2] as u32
+	}
+}
+
+impl Add for Color {
+	type Output = Self;
+
+	fn add(self, rhs: Self) -> Self::Output {
+		Self([
+			(self.0[0] + rhs.0[0]) / 2,
+			(self.0[1] + rhs.0[1]) / 2,
+			(self.0[2] + rhs.0[2]) / 2,
+		])
 	}
 }
 
