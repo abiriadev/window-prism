@@ -40,9 +40,17 @@ fn main() -> anyhow::Result<()> {
 			},
 			// Event::MainEventsCleared => todo!(),
 			Event::RedrawRequested(wid) => {
+				let Some(color_window) = color_windows.get(&wid) else { return; };
+
+				let areas = color_windows
+					.iter()
+					.filter(|(&k, _)| k != wid)
+					.filter_map(|(_, w)| color_window.is_overlapping_with(w))
+					.collect::<Vec<_>>();
+
 				let Some(color_window) = color_windows.get_mut(&wid) else { return; };
 
-				color_window.draw();
+				color_window.draw(&areas);
 			},
 			Event::LoopDestroyed => (),
 			_ => (),
